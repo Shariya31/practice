@@ -1,26 +1,28 @@
 const express = require('express')
 const app = express();
-const port = 9900
+const cors = require('cors')
+const db = require('./db')
+const bodyParser = require('body-parser')
+const port = 9900;
+
+app.use(cors())
+app.use(bodyParser.json())
 
 app.get('/', (req, res)=>{
-    res.send('<h2>Welcome</h2>')
+    res.send('welcome')
 })
 
-app.get('/person', (req, res)=>{
-    let person = {
-        name: 'david',
-        age: 23,
-        height: '5ft',
-        hobbies: ['hiking', 'swimming']
-    }
-    res.send(person)
-})
+// import the routes
+const personRoute = require('./routes/personRoute')
+const menuItemRoute = require('./routes/menuItemRoute')
 
 
-
-
-
+// use the routes
+app.use('/person', personRoute)
+app.use('/menuItems', menuItemRoute)
 
 app.listen(port, ()=>{
-    console.log(`Server is running at port http://localhost:${port}`)
+    console.log(`Server is running on port http://localhost:${port}`)
+
 })
+

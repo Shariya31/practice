@@ -1,7 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getLocalData = ()=>{
+    let todos = localStorage.getItem('list')
+    console.log('todo is', todos)
+    if(todos){
+        return JSON.parse(todos)
+    }
+    else{
+        return []
+    }
+}
+
+
+
 const initialState = {
-    todos: []
+    todos: getLocalData()
 }
 
 const todoSlice = createSlice({
@@ -10,18 +23,20 @@ const todoSlice = createSlice({
     reducers: {
         addTodo: (state, action)=>{
             const todo = {    
-                id: new Date().getTime().toString(),
+                id: crypto.randomUUID(),
                 text: action.payload
             }
             state.todos.push(todo)
         }, 
         removeTodo: (state, action)=>{
             state.todos = state.todos.filter((todo)=>{
-                 todo.id !== action.payload
+                 return todo.id !== action.payload
             })
         } 
     }
 })
 
-export const {addTodo, removeTodo} = todoSlice.actions
+export const {addTodos, removeTodo} = todoSlice.actions
 export default todoSlice.reducer
+
+

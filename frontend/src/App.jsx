@@ -1,48 +1,31 @@
-// import React from 'react'
-// import CompA from './CompA'
-// import {FirstName} from './CompA'
+import React, {useState, useEffect} from 'react'
 
-// const App = () => {
-//   return (
-//     <div>
-//       <FirstName.Provider value={{name: 'john', id: 1}}>
-
-//       <CompA/>
-//       </FirstName.Provider>
-//     </div>
-//   )
-// }
-
-// export default App
-
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { addTodo, removeTodo } from './features/todo/todoSlice'
 const App = () => {
-  const [item, setItem] = useState('')
-  const dispatch = useDispatch()
-  const todos = useSelector(state => state.todoList.todos)
 
- const handleSubmit = (e)=>{
-  e.preventDefault();
-  dispatch(addTodo(item))
-  setItem('')
- }
+  const [data, setData] = useState([])
 
- const deleteTodo = (id)=>{
-  dispatch(removeTodo(id))
- }
+  const getData = async()=>{
+    const url = ' http://localhost:9900/person'
+    let response = await fetch(url)
+    let parsedData  = await response.json()
+    // console.log(parsedData)
+    setData([
+      ...data,
+      ...parsedData
+    ])
+  }
+
+  useEffect(()=>{
+    getData();
+  },[])
+
+  console.log(data)
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={item} onChange={(e)=>setItem(e.target.value)} />
-        <button>Add</button>
-      </form>
-
-      {todos.map((todo)=>(
-        <div key={todo.id}>
-          <h3>{todo.text}</h3>
-          <button onClick={()=>deleteTodo(todo.id)}>Increment</button>
+      {data.map((val)=>(
+        <div key={val._id}>
+          <h3>{val.name}</h3>
         </div>
       ))}
     </div>
